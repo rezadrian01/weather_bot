@@ -12,13 +12,14 @@ async function sendTelegramMessage(data) {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   try {
     // await bot.sendMessage(process.env.TELEGRAM_CHAT_ID, message);
-    const text = `* The current weather at ${data.name} is as follows: *
+    const text = `🌤️ *Weather Update for ${data.name}:* 🌍
 
-Temperature: *${data.main.temp}°C*
-Condition: *${data.weather[0].main}*
-Description: *${data.weather[0].description}*
-Humidity: *${data.main.humidity}%*
-Wind Speed: *${data.wind.speed} km/h*
+  🌡️ *Temperature:* ${data.main.temp}°C
+  🌈 *Condition:* ${data.weather[0].main} (${data.weather[0].description})
+  💧 *Humidity:* ${data.main.humidity}%
+  🌬️ *Wind Speed:* ${data.wind.speed} km/h
+
+  Stay safe and enjoy your day! 😊
     `;
 
     const response = await axios.post(

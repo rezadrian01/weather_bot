@@ -10,7 +10,7 @@ const LOCATION = "Klojen,id";
 
 async function getWeather() {
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${LOCATION}&appid=${API_KEY}&units=metric`;
-
+  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=-7.9612&lon=112.6176&appid=304d596c538a1e63ee2ef75645aa95e8&units=metric`;
   try {
     const response = await axios.get(url);
     return { condition: response.data.weather[0].main, detail: response.data };
@@ -23,13 +23,13 @@ async function getWeather() {
 async function checkWeather() {
   const { condition: newWeather, detail } = await getWeather();
   if (!newWeather) return;
+  const weatherDesc = detail.weather[0].description;
+  const lastWeatherDesc = await redis.get("weather_klojen_desc");
 
-  const lastWeather = await redis.get("weather_klojen");
-
-  if (lastWeather !== newWeather) {
-    console.log(`Weather change ${lastWeather} -> ${newWeather}`);
-    await redis.set("weather_klojen", newWeather);
-    console.log(`Weather changed to ${newWeather}`);
+  if (lastWeatherDesc !== weatherDesc) {
+    console.log(`Weather change ${lastWeatherDesc} -> ${weatherDesc}`);
+    await redis.set("weather_klojen_desc", weatherDesc);
+    console.log(`Weather changed to ${weatherDesc}`);
     await sendTelegramMessage(detail);
   } else {
     console.log("Weather is still the same");
